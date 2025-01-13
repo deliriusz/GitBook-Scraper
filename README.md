@@ -1,3 +1,8 @@
+# Fork note
+I forked original script and made some improvements:
+- take documentation url from argument
+- removed double document fetching for paths referring to local tag (# tags on local page)
+
 # GitBook Scraper
 
 This Python script scrapes documentation from a GitBook site and converts the extracted HTML content into Markdown format. It can be used to back up documentation or convert it for offline use in Markdown-based repositories or projects.
@@ -13,12 +18,12 @@ This Python script scrapes documentation from a GitBook site and converts the ex
 Ensure that you have the following installed:
 
 - Python 3.x
-- Required Python packages: requests, beautifulsoup4, html2text
+- Required Python packages: requests, beautifulsoup4, html2text, selenium
 
 You can install the necessary packages using:
 
 ```bash
-pip install requests beautifulsoup4 html2text
+pip install requests beautifulsoup4 html2text selenium
 ```
 ## Usage
 
@@ -29,15 +34,11 @@ To use the script, follow these steps:
 ```bash
 git clone https://github.com/A2-Security/GitBook-Scraper
 cd gitbook-scraper
+
 ```
 ### Update the script:
 
-- Replace the gitbook_url variable in the script with the GitBook URL you want to scrape.
-
-```python
-gitbook_url = 'docs-one.example.xyz'  # Example GitBook URL
-```
-- You can also change the output file name by modifying the output_file variable.
+- You can change the output file name by modifying the output_file variable.
 
 ```python
 output_file = 'documentation.md'  # Desired output file name
@@ -48,7 +49,7 @@ output_file = 'documentation.md'  # Desired output file name
 - Execute the script to start scraping the GitBook:
 
 ```bash
-    python gitbook_scraper.py
+    python gitbook_scraper.py <URL>
 ```
 The script will:
 - Fetch the main page of the GitBook.

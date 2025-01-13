@@ -1,12 +1,26 @@
+import sys
 import requests
 from bs4 import BeautifulSoup
 import html2text
 import urllib.parse
+from selenium import webdriver
+import time
 
 def fetch_html(url):
-    response = requests.get(url)
-    response.raise_for_status()  # Check if the request was successful
-    return response.text
+    # TODO: change path
+    # alternatively, webdriver_manager could be used: https://github.com/SergeyPirogov/webdriver_manager
+    service = webdriver.FirefoxService(executable_path='/snap/bin/firefox.geckodriver')
+    options = webdriver.FirefoxOptions()
+    options.page_load_strategy = 'eager'
+
+    options.add_argument('-headless')
+    assert options.capabilities['browserName'] == 'firefox'
+    driver = webdriver.Firefox(options=options,service=service)
+    driver.get(url)
+
+    source = driver.page_source
+    driver.quit()
+    return source
 
 def extract_content_from_html(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -31,7 +45,8 @@ def extract_page_links(soup, base_url):
     links = set()
     for a_tag in soup.find_all('a', href=True):
         href = a_tag['href']
-        full_url = urllib.parse.urljoin(base_url, href)
+        href_no_local_tag = href.split('#')[0]
+        full_url = urllib.parse.urljoin(base_url, href_no_local_tag)
         
         # Check if the URL belongs to the same domain
         if urllib.parse.urlparse(full_url).netloc == urllib.parse.urlparse(base_url).netloc:
@@ -69,7 +84,7 @@ def main(gitbook_url, output_file):
     print("Done!")
 
 if __name__ == '__main__':
-    gitbook_url = 'https://docs-one.zerolend.xyz/'  # Replace with the GitBook URL
+    gitbook_url = sys.argv[1] # Documentation url
     output_file = 'documentation.md'  # Desired output markdown file
 
     main(gitbook_url, output_file)
