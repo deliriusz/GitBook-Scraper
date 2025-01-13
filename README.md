@@ -2,6 +2,7 @@
 I forked original script and made some improvements:
 - take documentation url from argument
 - removed double document fetching for paths referring to local tag (# tags on local page)
+- added selenium to load webpage using browser, because some pages load text dynamically
 
 # GitBook Scraper
 
